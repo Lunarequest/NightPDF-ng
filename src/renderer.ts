@@ -17,6 +17,7 @@ declare global {
     interface Window {
         api: {
             getPath: any,
+            getPDF: any,
             removeAllListeners: any,
             openNewPDF: any,
             newWindow: any,
@@ -36,6 +37,7 @@ declare global {
 const nightPDF = (function () {
     console.log('loading');
     let _pdfElement: any;
+    let _splashImageElement: HTMLElement;
     let _headerElement: HTMLElement;
     let _titleElement: HTMLElement;
     let _darkConfiguratorElement: HTMLElement;
@@ -55,6 +57,7 @@ const nightPDF = (function () {
     function main() {
         _pdfElement = document.getElementById('pdfjs');
         _headerElement = document.getElementById('header');
+        _splashImageElement = document.getElementById('splash');
         _titleElement = document.getElementById('title');
         _defaultButton = document.getElementById('default-button');
         _sepiaButton = document.getElementById('sepia-button');
@@ -211,34 +214,43 @@ const nightPDF = (function () {
             console.log('opening in new window');
             window.api.newWindow(file);
         } else {
-            const loadingTask = pdfjsLib.getDocument(new URL(`file://${encodeURI(file)}`));
-            loadingTask.promise.then(function (pdfDocument: any) {
-                // Request a first page
-                return pdfDocument.getPage(1).then(function (pdfPage: any) {
-                  // Display page on the existing canvas with 100% scale.
-                  const viewport = pdfPage.getViewport({ scale: 1.0 });
-                  const canvas = document.getElementById("pdfjs");
-                  canvas.width = viewport.width;
-                  canvas.height = viewport.height;
-                  const ctx = canvas.getContext("2d");
-                  const renderTask = pdfPage.render({
-                    canvasContext: ctx,
-                    viewport,
-                  });
-                  return renderTask.promise;
+            let filecontents: Uint8Array = window.api.getPDF(file);
+            var loadingTask = pdfjsLib.getDocument(filecontents);
+            loadingTask.promise.then(function(pdf) {
+                pdf.getPage(1).then(function(page: any) {
+                console.log('Page loaded');
+                
+                var scale = 1.0;
+                var viewport = page.getViewport({scale: scale});
+            
+                // Prepare canvas using PDF page dimensions
+                var canvas = document.getElementById('pdfjs');
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+            
+                // Render PDF page into canvas context
+                var renderContext = {
+                  canvasContext: context,
+                  viewport: viewport
+                };
+                _splashImageElement.style.display = 'none';
+                var renderTask = page.render(renderContext);
+                renderTask.promise.then(function () {
+                  console.log('Page rendered');
                 });
-              })
-              .catch(function (reason: string) {
-                console.error("Error: " + reason);
-              }
-
-            )
+              });
+            }, function (reason) {
+              // PDF loading error
+              console.error(reason);
+            });
         }
-        _fileDidLoad();
+        _fileDidLoad(file);
     };
 
-    const _fileDidLoad = () => {
+    const _fileDidLoad = (file: string) => {
         console.log('Loaded PDF');
+        _updateTitle(file);
         _headerElement.style.visibility = 'visible';
         window.api.togglePrinting(true);
         window.api.resizeWindow(null);

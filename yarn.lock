@@ -302,7 +302,7 @@
     xterm-addon-fit "^0.5.0"
     xterm-addon-search "^0.8.0"
 
-"@electron/get@^1.13.0", "@electron/get@^1.6.0", "@electron/get@^1.9.0":
+"@electron/get@^1.0.1", "@electron/get@^1.6.0", "@electron/get@^1.9.0":
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/@electron/get/-/get-1.14.1.tgz#16ba75f02dffb74c23965e72d617adc721d27f40"
   integrity sha512-BrZYyL/6m0ZXz/lDxy/nlVhQz+WF+iPS6qXolEU8atw7h6v1aYkjwJZ63m+bJMBTxDE66X+r2tPS4a/8C82sZw==
@@ -599,10 +599,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.31.tgz#a5bb84ecfa27eec5e1c802c6bbf8139bdb163a5d"
   integrity sha512-AR0x5HbXGqkEx9CadRH3EBYx/VkiUgZIhP4wvPn/+5KIsgpNoyFaRlVe0Zlx9gRtg8fA06a9tskE2MSN7TcG4Q==
 
-"@types/node@^16.11.26":
-  version "16.11.33"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.33.tgz#566713b1b626f781c5c58fe3531307283e00720c"
-  integrity sha512-0PJ0vg+JyU0MIan58IOIFRtSvsb7Ri+7Wltx2qAg94eMOrpg4+uuP3aUHCpxXc1i0jCXiC+zIamSZh3l9AbcQA==
+"@types/node@^14.6.2":
+  version "14.18.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.16.tgz#878f670ba3f00482bf859b6550b6010610fc54b5"
+  integrity sha512-X3bUMdK/VmvrWdoTkz+VCn6nwKwrKCFTHtqwBIaQJNx4RUIBBUFXM00bqPz/DsDd+Icjmzm6/tyYZzeGVqb6/Q==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -2141,13 +2141,13 @@ electron-winstaller@^5.0.0:
     lodash.template "^4.2.2"
     temp "^0.9.0"
 
-electron@18.2.0:
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-18.2.0.tgz#a0cbf8d5d1a1e9d1c195d86cd6937e721ed60fec"
-  integrity sha512-AN+CKalzA57beuvuI90PVgW/yj6zjw7rpb1h8FvIwBJ3toDC3x0Plfzbzh4Ondecbjci7pSg/NA5ngOk804WIQ==
+electron@13:
+  version "13.6.9"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-13.6.9.tgz#7bd83cc1662ceaaa09dcd132a7b507cec888b028"
+  integrity sha512-Es/sBy85NIuqsO9MW41PUCpwIkeinlTQ7g0ainfnmRAM2rmog3GBxVCaoV5dzEjwTF7TKG1Yr/E7Z3qHmlfWAg==
   dependencies:
-    "@electron/get" "^1.13.0"
-    "@types/node" "^16.11.26"
+    "@electron/get" "^1.0.1"
+    "@types/node" "^14.6.2"
     extract-zip "^1.0.3"
 
 emoji-regex@^8.0.0:

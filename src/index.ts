@@ -138,14 +138,6 @@ if (argsLength > 1 && args[argsLength - 1].endsWith('.pdf')) {
     fileToOpen = args[argsLength - 1];
 }
 
-app.whenReady().then(()=>{
-            protocol.interceptFileProtocol('file',(request,callback) => {
-                console.log(request.url);
-                callback({ path:  request.url.substr(8) });
-            }
-        )
-    }
-);
 
 app.on('open-file', (event, path) => {
     event.preventDefault();
