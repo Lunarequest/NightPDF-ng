@@ -1,10 +1,9 @@
 import './css/index.scss';
 import './assets/icon2.png';
-import * as pdfjsLib from 'pdfjs-dist';
-import nouislider from 'nouislider';
+import noUiSlider from "nouislider";
+
 
 'use strict';
-pdfjsLib.GlobalWorkerOptions.workerPort = new Worker( new URL('../node_modules/pdfjs-dist/build/pdf.worker.js', import.meta.url));
 function _try(func: any, fallbackValue: any) {
     try {
         const value = func();
@@ -37,7 +36,7 @@ declare global {
 const nightPDF = (function () {
     console.log('loading');
     let _pdfElement: any;
-    let _splashImageElement: HTMLElement;
+    let _appContainerElement: HTMLElement;
     let _headerElement: HTMLElement;
     let _titleElement: HTMLElement;
     let _darkConfiguratorElement: HTMLElement;
@@ -57,7 +56,7 @@ const nightPDF = (function () {
     function main() {
         _pdfElement = document.getElementById('pdfjs');
         _headerElement = document.getElementById('header');
-        _splashImageElement = document.getElementById('splash');
+        _appContainerElement = document.getElementById('pdfjs');
         _titleElement = document.getElementById('title');
         _defaultButton = document.getElementById('default-button');
         _sepiaButton = document.getElementById('sepia-button');
@@ -208,42 +207,21 @@ const nightPDF = (function () {
         }
     };
 
-    const _openFile = (file: string) => {
+    const _openFile = (file: any) => {
         console.log('opening ', file);
         if (_pdfElement.src) {
             console.log('opening in new window');
             window.api.newWindow(file);
         } else {
-            let filecontents: Uint8Array = window.api.getPDF(file);
-            var loadingTask = pdfjsLib.getDocument(filecontents);
-            loadingTask.promise.then(function(pdf) {
-                pdf.getPage(1).then(function(page: any) {
-                console.log('Page loaded');
-                
-                var scale = 1.0;
-                var viewport = page.getViewport({scale: scale});
-            
-                // Prepare canvas using PDF page dimensions
-                var canvas = document.getElementById('pdfjs');
-                var context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-            
-                // Render PDF page into canvas context
-                var renderContext = {
-                  canvasContext: context,
-                  viewport: viewport
-                };
-                _splashImageElement.style.display = 'none';
-                var renderTask = page.render(renderContext);
-                renderTask.promise.then(function () {
-                  console.log('Page rendered');
-                });
-              });
-            }, function (reason) {
-              // PDF loading error
-              console.error(reason);
-            });
+            _appContainerElement.style.zIndex = '1';
+            _pdfElement.src =
+                'pdfjs/web/viewer.html?file=' + 
+                "file://" +
+                encodeURIComponent(file) +
+                '#pagemode=none';
+            _pdfElement.onload = _fileDidLoad;
+            _updateTitle(file);
+            //send message to update window size
         }
         _fileDidLoad(file);
     };
@@ -307,7 +285,7 @@ const nightPDF = (function () {
     };
 
     const _setupSliders = () => {
-        nouislider.create(_brightnessSliderElement, {
+        noUiSlider.create(_brightnessSliderElement, {
             start: 7,
             step: 1,
             connect: 'lower',
@@ -330,7 +308,7 @@ const nightPDF = (function () {
             ],
         });
 
-        nouislider.create(_grayscaleSliderElement, {
+        noUiSlider.create(_grayscaleSliderElement, {
             start: 95,
             step: 1,
             connect: 'lower',
@@ -353,7 +331,7 @@ const nightPDF = (function () {
             ],
         });
 
-        nouislider.create(_invertSliderElement, {
+        noUiSlider.create(_invertSliderElement, {
             start: 95,
             step: 1,
             connect: 'lower',
@@ -376,7 +354,7 @@ const nightPDF = (function () {
             ],
         });
 
-        nouislider.create(_sepiaSliderElement, {
+        noUiSlider.create(_sepiaSliderElement, {
             start: 55,
             step: 1,
             connect: 'lower',
@@ -399,7 +377,7 @@ const nightPDF = (function () {
             ],
         });
 
-        nouislider.create(_hueSliderElement, {
+        noUiSlider.create(_hueSliderElement, {
             start: 180,
             step: 1,
             connect: 'lower',
@@ -422,7 +400,7 @@ const nightPDF = (function () {
             ],
         });
 
-        nouislider.create(_extraBrightnessSliderElement, {
+        noUiSlider.create(_extraBrightnessSliderElement, {
             start: 0,
             step: 1,
             connect: 'lower',
@@ -522,7 +500,8 @@ const nightPDF = (function () {
     };
 
     const _updateTitle = (filePath: string) => {
-        const fileName = window.api.getPath(filePath);
+        let path = `${filePath}`
+        const fileName = window.api.getPath(path);
         if (fileName) {
             _titleElement.innerHTML = fileName;
             document.title = fileName;
